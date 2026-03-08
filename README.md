@@ -130,3 +130,4 @@ nohup python3 bot.py &> bot.log &
 
 # scanner
 # scanner
+# scanner
