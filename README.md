@@ -128,3 +128,4 @@ nohup python3 bot.py &> bot.log &
 | `Permission denied` | Run with `sudo` or change `ALLOWED_ROOT` to a path you own |
 | Module not found | Run `pip3 install -r requirements.txt` again |
 
+# scanner
