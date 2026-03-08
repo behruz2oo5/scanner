@@ -1,0 +1,22 @@
+import os
+from dotenv import load_dotenv
+from pathlib import Path
+
+load_dotenv()
+
+# -- Telegram Bot Token from @BotFather --
+BOT_TOKEN: str = os.getenv("BOT_TOKEN", "")
+
+# -- Authorized Telegram chat IDs (comma-separated in .env) --
+_raw_ids = os.getenv("ADMIN_IDS", "")
+ADMIN_IDS: set[int] = {int(i.strip()) for i in _raw_ids.split(",") if i.strip()}
+
+# -- Root directory the bot is allowed to browse --
+# Defaults to filesystem root. Set to e.g. /home/kali to restrict access.
+ALLOWED_ROOT: Path = Path(os.getenv("ALLOWED_ROOT", "/")).resolve()
+
+# -- Max file size to send as text via /cat (bytes) --
+MAX_TEXT_SIZE: int = 4096  # Telegram message limit
+
+if not BOT_TOKEN:
+    raise ValueError("BOT_TOKEN is not set. Copy .env.example to .env and fill in your token.")
