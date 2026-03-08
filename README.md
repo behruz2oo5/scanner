@@ -1,133 +1,92 @@
-# 🤖 Kali File-Reader Telegram Bot
+# 🤖 Kali CyberSec Telegram Bot (All-in-One)
 
-A Python-based Telegram bot that lets you browse and read files on your **Kali Linux** machine directly from Telegram chat. Secured by an admin whitelist so only you can use it.
-
----
-
-## 📦 Project Structure
-
-```
-kali-telegram-bot/
-├── bot.py            # Main bot logic & all command handlers
-├── config.py         # Loads settings from .env
-├── requirements.txt  # Python dependencies
-├── .env.example      # Environment variable template
-└── README.md         # This file
-```
+A powerful, single-file Telegram bot designed for **Kali Linux** that automates common cybersecurity reconnaissance tasks. Browse directories, scan ports, discover subdomains, fingerprint technologies, and take screenshots—all directly from your Telegram chat.
 
 ---
 
-## 🚀 Setup (on your Kali machine)
+## � Features
 
-### 1. Prerequisites
+- **Port Scanning**: Resolve hostnames and scan the top 18 most common ports.
+- **Subdomain Discovery**: Integrated with `subfinder` and `assetfinder`.
+- **Directory Brute-forcing**: High-speed discovery using `feroxbuster` with dynamic wordlist selection (WordPress-aware).
+- **Technology Fingerprinting**: Identify web stacks using `whatweb`.
+- **Automated Screenshots**: Capture visual evidence using `gowitness`.
+- **Data Persistence**: All results are saved to a local SQLite database (`recon_results.db`).
+- **Security**: Built-in admin whitelist to ensure only you can control the bot.
 
+---
+
+## � Prerequisites
+
+This bot is designed to run on **Kali Linux**. Ensure you have the following tools installed:
+
+### 1. System Tools
 ```bash
 sudo apt update
-sudo apt install python3 python3-pip -y
+sudo apt install nmap whatweb feroxbuster seclists -y
 ```
 
-### 2. Clone / copy the project
-
-Copy the `kali-telegram-bot/` folder to your Kali machine, for example into your home directory:
-
+### 2. Go-based Tools
 ```bash
-cd ~
-# copy the folder here
-```
+# Subdomain discovery
+go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+go install -v github.com/tomnomnom/assetfinder@latest
 
-### 3. Install dependencies
-
-```bash
-cd kali-telegram-bot
-pip3 install -r requirements.txt
-```
-
-### 4. Create your `.env` file
-
-```bash
-cp .env.example .env
-nano .env
-```
-
-Fill in the values:
-
-| Variable | Description |
-|---|---|
-| `BOT_TOKEN` | Token from **@BotFather** on Telegram |
-| `ADMIN_IDS` | Your Telegram user ID(s), comma-separated |
-| `ALLOWED_ROOT` | Directory the bot can browse (e.g. `/home/kali`) |
-
-> **Tip — Find your Telegram ID:** Message **@userinfobot** on Telegram and it will reply with your numeric user ID.
-
-### 5. Run the bot
-
-```bash
-python3 bot.py
-```
-
-You should see:
-```
-Bot started. Press Ctrl+C to stop.
+# Screenshots
+go install github.com/sensepost/gowitness@latest
 ```
 
 ---
 
-## 💬 Commands
+## 📦 Installation
 
-| Command | Description |
-|---|---|
+1. **Clone the repository** (or copy `bot.py`):
+   ```bash
+   mkdir kali-bot && cd kali-bot
+   ```
+
+2. **Install Python dependencies**:
+   ```bash
+   pip install python-telegram-bot python-dotenv
+   ```
+
+3. **Set up environment variables**:
+   Create a `.env` file in the same directory:
+   ```env
+   BOT_TOKEN=your_telegram_bot_token
+   ADMIN_IDS=your_numeric_telegram_id
+   ```
+   > [!TIP]
+   > Get your `BOT_TOKEN` from [@BotFather](https://t.me/BotFather) and your `ADMIN_IDS` from [@userinfobot](https://t.me/userinfobot).
+
+---
+
+## 🕹 Usage
+
+Run the bot:
+```bash
+python3 bot.py
+```
+
+### Available Commands
+
+| Command | Action |
+|:--- |:--- |
 | `/start` | Welcome message |
-| `/help` | List all commands |
-| `/pwd` | Show the allowed root directory |
-| `/ls [path]` | List directory contents |
-| `/cat <path>` | Read & display a text file |
-| `/download <path>` | Send a file as a Telegram document |
-
-### Examples
-
-```
-/ls /home/kali
-/ls /etc
-/cat /etc/hostname
-/cat /home/kali/.bashrc
-/download /home/kali/notes.txt
-```
+| `/help` | Detailed command list |
+| `/scan <target>` | Quick port scan for 18 common services |
+| `/recon <target>` | **Full Pipeline**: Subdomains → Ports → Tech → Dirs → Screenshot |
+| `/ferox <url>` | Dedicated directory brute-force |
+| `/history` | View scan history from the current session |
 
 ---
 
-## 🔒 Security
+## 🔒 Security & Disclaimer
 
-- **Admin whitelist** — only users in `ADMIN_IDS` can use the bot. Everyone else gets `⛔ Unauthorized.`
-- **Path validation** — all paths are resolved with `Path.resolve()` and checked against `ALLOWED_ROOT`. `../` traversal attempts are blocked.
-- **File size limits** — `/cat` refuses files > 5 MB; `/download` refuses files > 50 MB.
-
----
-
-## 🔄 Run as a Background Service (optional)
-
-To keep the bot running after you close your terminal:
-
-```bash
-# Using screen
-screen -S telebot
-python3 bot.py
-# Press Ctrl+A then D to detach
-
-# Or using nohup
-nohup python3 bot.py &> bot.log &
-```
+- **Admin Only**: Unauthorized users are blocked automatically via the `ADMIN_IDS` whitelist.
+- **Path Traversal**: Protected against `../` attacks (for future file reading features).
+- **Ethical Use**: This tool is for **authorized security testing only**. Never use it on targets you do not have permission to scan.
 
 ---
 
-## 🐛 Troubleshooting
-
-| Problem | Fix |
-|---|---|
-| `BOT_TOKEN is not set` | Make sure `.env` exists and has `BOT_TOKEN=...` |
-| Bot doesn't respond | Check `ADMIN_IDS` contains your correct Telegram user ID |
-| `Permission denied` | Run with `sudo` or change `ALLOWED_ROOT` to a path you own |
-| Module not found | Run `pip3 install -r requirements.txt` again |
-
-# scanner
-# scanner
-# scanner
+Built with ❤️ for the security community.
