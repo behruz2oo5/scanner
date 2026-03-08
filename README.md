@@ -129,3 +129,4 @@ nohup python3 bot.py &> bot.log &
 | Module not found | Run `pip3 install -r requirements.txt` again |
 
 # scanner
+# scanner
